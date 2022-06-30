@@ -1,0 +1,13 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: provider3
+eureka:
+  client:
+    service-url:
+         defaultZone: http://localhost:8798/eureka/
+  instance:
+    instance_id: ${spring.cloud.client.hostname}:${server.port}
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10

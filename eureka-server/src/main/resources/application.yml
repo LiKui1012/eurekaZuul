@@ -1,0 +1,19 @@
+server:
+    port: 8798
+
+spring:
+  application:
+    name: eureka-server
+
+eureka:
+  instance:
+      hostname: localhost
+  server:
+    # 关闭eureka服务器的自我保护功能,忽略网络分区故障
+    enable-self-preservation: false
+    # eureka服务器检测失效服务的时间间隔
+    eviction-interval-timer-in-ms: 5000
+  client:
+    # eureka服务器本身也是一个客户端,顾不需要注册自身
+    register-with-eureka: false
+    fetch-registry: false

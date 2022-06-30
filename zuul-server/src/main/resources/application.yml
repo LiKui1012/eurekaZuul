@@ -1,0 +1,30 @@
+server:
+  port: 8086
+spring:
+  application:
+    name: zuul-server
+eureka:
+ client:
+    service-url:
+      defaultZone: http://localhost:8798/eureka/
+    # 表示eureka client间隔多久去拉取服务注册信息
+    registry-fetch-interval-seconds: 5
+ instance:
+    instance_id: ${spring.cloud.client.hostname}:${server.port}:${spring.application.name}:@project.version@
+
+#zuul:
+#  # 过滤所有微服务接口,即使正确的请求也不可以请求
+#  ignored-services: "*"
+#  prefix: /wu
+##  routes:
+##    consumer:
+##      path: /consumerTest/**
+##    other-client:
+##      path: /other/**
+##consumer:
+##  ribbon:
+##    NFLoadBalancerRuleClassName: com.zuul.zuul.rule.MyRule
+##other-client:
+##  ribbon:
+##    NFLoadBalancerRuleClassName: com.zuul.zuul.rule.MyRule
+##
