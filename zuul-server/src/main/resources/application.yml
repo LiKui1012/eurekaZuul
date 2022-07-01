@@ -11,6 +11,21 @@ eureka:
     registry-fetch-interval-seconds: 5
  instance:
     instance_id: ${spring.cloud.client.hostname}:${server.port}:${spring.application.name}:@project.version@
+ribbon:
+  ConnectTimeout: 500 # Ribbon的连接超时时间(毫秒)
+  ReadTimeout: 6000 # Ribbon的数据读取超时时间(毫秒)
+zuul:
+  sensitive-headers:        #敏感header的设置，此处为空,默认Authorization不被转发
+  #  ignored-services: '*'  #该配置关闭，则zuul会默认代理所有注册在Eureka上的微服务
+  routes:
+    pro1:              #路由的一个名称，可以任意起名
+      path: /pro1/** #拦截到的路径
+      serviceId: provider1 #模块的服务名
+    pro3:
+      path: /pro3/**
+      serviceId: provider3
+
+
 
 #zuul:
 #  # 过滤所有微服务接口,即使正确的请求也不可以请求

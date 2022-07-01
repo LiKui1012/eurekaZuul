@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.zuul.zuul.Constants.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,6 +17,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PostFilter extends BaseFilter {
+    private static final String START_TIME_KE = "start_time";
+    private Logger logger = LoggerFactory.getLogger(PostFilter.class);
+
 
     /**
      *  过滤器执行的时间
@@ -43,6 +48,7 @@ public class PostFilter extends BaseFilter {
      */
     @Override
     public boolean shouldFilter() {
+        System.out.println("Post-shouldFilter");
         return true;
     }
 
@@ -51,7 +57,8 @@ public class PostFilter extends BaseFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
         HttpServletResponse response = ctx.getResponse();
-        //此处注意只有在POST的Filter中才可以捕获response!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        long startTime = (long) RequestContext.getCurrentContext().get(START_TIME_KE);
+        logger.info("请求完成,耗时{}秒", (System.currentTimeMillis() - startTime) / 1000);
         return null;
     }
 }

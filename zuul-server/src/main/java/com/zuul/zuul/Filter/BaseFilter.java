@@ -5,6 +5,10 @@ import com.netflix.zuul.ZuulFilter;
 /**
  * Created by Hanlex.Liu on 2019/11/28 09:24.
  * 功能描述 :
+ * pre - 前置过滤器，在请求被路由前执行，通常用于处理身份认证，日志记录等；
+ * route - 在路由执行后，服务调用前被调用；
+ * error - 任意一个filter发生异常的时候执行或远程服务调用没有反馈的时候执行（超时），通常用于处理异常；
+ * post - 在route或error执行后被调用，一般用于收集服务信息，统计服务性能指标等，也可以对response结果做特殊处理。
  */
 public abstract class BaseFilter extends ZuulFilter {
 

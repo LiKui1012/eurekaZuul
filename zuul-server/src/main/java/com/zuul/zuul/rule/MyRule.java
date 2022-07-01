@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Created by Hanlex.Liu on 2019/8/30 09:16.
- * 功能描述 :
+ * 功能描述 :route类型过滤器的规则，采取轮询的方法找到服务实例
  */
 
 @Component
@@ -27,17 +27,18 @@ public class MyRule extends AbstractLoadBalancerRule {
         ILoadBalancer lb = this.getLoadBalancer();
         List<Server> upServerList = lb.getReachableServers(); //可用服务列表
         List<Server> allServerList = lb.getAllServers();
-        upServerList.forEach(server -> {
-            System.out.println(server.toString());
-        });
+//        upServerList.forEach(server -> {
+//            System.out.println(server.toString());
+//        });
         int index = (int)(Math.random() * (upServerList.size()));
-        logger.info(upServerList.get(index).toString());
+        logger.info(upServerList.get(index).toString()+"++++++++++++");
         return upServerList.get(index);
     }
 
 
     @Override
     public void initWithNiwsConfig(IClientConfig arg0) {
+        System.out.println("arg0+++++++++"+arg0);
         // TODO Auto-generated method stub
 
     }

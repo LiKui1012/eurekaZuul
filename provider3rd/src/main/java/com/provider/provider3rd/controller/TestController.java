@@ -21,6 +21,25 @@ public class TestController {
 
     @GetMapping("test3")
     public Object test(){
+        System.out.println(
+                "进入test3"
+        );
+        int a=0;
+        int b=1;
+        int c=a/b;
+        System.out.println("1/0="+c);
+        //这里的设置2秒统计接口耗时，同时也要修改xml中的ribbon连接时间，因为zuul的超时是集成ribbon的，连接时间，处理时间默认分别是0.5 和1秒
+        try {
+            Thread.sleep(2 * 1000);
+        }catch (InterruptedException e){
+        }
+        System.out.println(
+                "等待test3"
+        );
+        //只会返回异常，zuul不会处理被调用者的异常，只会当被调用者宕机才会触发熔断
+        int d=b/a;
+        System.out.println("0/1="+d);
+
         return "789JQK";
     }
 
@@ -29,5 +48,21 @@ public class TestController {
         String provider1Str = provider1Client.test1(); //使用 feignClient 中的方法 请求 provider1 中的接口
         return "test4" + provider1Str;
     }
+
+
+    /**
+     * 模拟错误访问
+     * @return
+     */
+    @RequestMapping("/testToError")
+    public String testToError() throws Exception{
+        try {
+            Integer.parseInt("slfda");
+            return "success";
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
 
 }

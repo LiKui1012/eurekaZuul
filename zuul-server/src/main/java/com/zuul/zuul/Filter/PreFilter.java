@@ -6,6 +6,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.zuul.zuul.Constants.Constants;
+import com.zuul.zuul.rule.MyRule;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
@@ -17,11 +21,16 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
+@Slf4j
 public class PreFilter extends BaseFilter {
 
+    private  Logger logger = LoggerFactory.getLogger(PreFilter.class);
 
-    @Autowired
-    private DiscoveryClient discoveryClient;
+    public static final String START_TIME_KEY = "start_time";
+
+
+//    @Autowired
+//    private DiscoveryClient discoveryClient;
 
 
     /**
@@ -51,6 +60,7 @@ public class PreFilter extends BaseFilter {
      */
     @Override
     public boolean shouldFilter() {
+        System.out.println("Pre-shouldFilter");
         return true;
     }
 
@@ -58,8 +68,16 @@ public class PreFilter extends BaseFilter {
     public Object run() throws ZuulException {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
-        HttpServletResponse response= ctx.getResponse();
+        //这里统计接口耗时
+        long startTime = System.currentTimeMillis();
+        RequestContext.getCurrentContext().set(START_TIME_KEY, startTime);
 
+
+
+        //可以不用 自定义实现逻辑
+        HttpServletResponse response= ctx.getResponse();
+        log.info("PreFilter.....method={},url={}",
+                request.getMethod(),request.getRequestURL().toString());
         // 跨域请求一共会进行两次请求 先发送options 是否可以请求
         // 调试可发现一共拦截两次 第一次请求为options，第二次为正常的请求 eg：get请求
 
@@ -72,8 +90,10 @@ public class PreFilter extends BaseFilter {
         }
 
         if(true){//通过 标识当前拦截器不拦截
+            System.out.println("通过 标识当前拦截器不拦截");
             ctx.setSendZuulResponse(true);
         }else {//不通过 标识当前拦截器拦截
+            System.out.println("不通过 标识当前拦截器拦截");
             ctx.setResponseStatusCode(HttpStatus.UNAUTHORIZED.value());//设置http状态码401
             ctx.setResponseBody("authentication failure : request is not allowed");//设置响应
         }

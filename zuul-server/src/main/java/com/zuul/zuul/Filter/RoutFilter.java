@@ -47,6 +47,7 @@ public class RoutFilter extends BaseFilter {
      */
     @Override
     public boolean shouldFilter() {
+        System.out.println("Route-shouldFilter");
         return true;
     }
 
