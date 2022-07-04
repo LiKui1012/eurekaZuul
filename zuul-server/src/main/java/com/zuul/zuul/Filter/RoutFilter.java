@@ -60,7 +60,7 @@ public class RoutFilter extends BaseFilter {
     }
 
     private void requestLog(HttpServletRequest request){
-        //记录请求转发时间,用于计算服务处理时间及效率
+        //记录请求到服务之前的时间
         //Log log = threadLocals.get();
         //log.setForwardTime(new Date().getTime());
     }

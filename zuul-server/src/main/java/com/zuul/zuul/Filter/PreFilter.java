@@ -11,9 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Hanlex.Liu on 2019/10/31 09:19.
@@ -23,6 +27,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class PreFilter extends BaseFilter {
+    @Autowired
+    private DiscoveryClient discoveryClient;
 
     private  Logger logger = LoggerFactory.getLogger(PreFilter.class);
 
@@ -68,35 +74,44 @@ public class PreFilter extends BaseFilter {
     public Object run() throws ZuulException {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
+        //获取所有服务名
+        List<String> allServices = discoveryClient.getServices();
+        List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>();
+        //根据服务名获取具体服务
+        allServices.forEach(server -> {
+            System.out.println("服务名"+server);
+            List<ServiceInstance> instances = discoveryClient.getInstances(server);
+            instances.forEach(instance ->{
+                System.out.println(server+"服务对应实例端口"+instance.getPort());
+                serviceInstances.add(instance);
+            });
+        });
         //这里统计接口耗时
         long startTime = System.currentTimeMillis();
         RequestContext.getCurrentContext().set(START_TIME_KEY, startTime);
-
-
 
         //可以不用 自定义实现逻辑
         HttpServletResponse response= ctx.getResponse();
         log.info("PreFilter.....method={},url={}",
                 request.getMethod(),request.getRequestURL().toString());
+        ctx.setSendZuulResponse(true);
         // 跨域请求一共会进行两次请求 先发送options 是否可以请求
         // 调试可发现一共拦截两次 第一次请求为options，第二次为正常的请求 eg：get请求
-
         //放通所有第一次options请求
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())){
-            ctx.setSendZuulResponse(false); //验证请求不进行路由
-            ctx.setResponseStatusCode(HttpStatus.OK.value());//返回验证成功的状态码
-            ctx.set("isSuccess", true);
-            return null;
-        }
-
-        if(true){//通过 标识当前拦截器不拦截
-            System.out.println("通过 标识当前拦截器不拦截");
-            ctx.setSendZuulResponse(true);
-        }else {//不通过 标识当前拦截器拦截
-            System.out.println("不通过 标识当前拦截器拦截");
-            ctx.setResponseStatusCode(HttpStatus.UNAUTHORIZED.value());//设置http状态码401
-            ctx.setResponseBody("authentication failure : request is not allowed");//设置响应
-        }
+//        if ("OPTIONS".equalsIgnoreCase(request.getMethod())){
+//            ctx.setSendZuulResponse(false); //验证请求不进行路由
+//            ctx.setResponseStatusCode(HttpStatus.OK.value());//返回验证成功的状态码
+//            ctx.set("isSuccess", true);
+//            return null;
+//        }
+//        if(true){//通过 标识当前拦截器不拦截
+//            System.out.println("通过 标识当前拦截器不拦截");
+//            ctx.setSendZuulResponse(true);
+//        }else {//不通过 标识当前拦截器拦截
+//            System.out.println("不通过 标识当前拦截器拦截");
+//            ctx.setResponseStatusCode(HttpStatus.UNAUTHORIZED.value());//设置http状态码401
+//            ctx.setResponseBody("authentication failure : request is not allowed");//设置响应
+//        }
         return null;
     }
 }
