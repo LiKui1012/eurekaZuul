@@ -16,7 +16,7 @@ ribbon:
   ReadTimeout: 6000 # Ribbon的数据读取超时时间(毫秒)
 zuul:
   sensitive-headers:        #敏感header的设置，此处为空,默认Authorization不被转发
-  #  ignored-services: '*'  #该配置关闭，则zuul会默认代理所有注册在Eureka上的微服务
+  #  ignored-services: '*'  #该配置关闭，则zuul会默认代理所有注册在Eureka上的微服务  provider4没有配置，默认用服务名provider4请求
   routes:
     pro1:              #路由的一个名称，可以任意起名
       path: /pro1/** #拦截到的路径
@@ -24,6 +24,30 @@ zuul:
     pro3:
       path: /pro3/**
       serviceId: provider3
+  ratelimit:
+    #key-prefix: springcloud-book #按粒度拆分的临时变量key前缀
+    enabled: true #启用开关
+    repository: IN_MEMORY #key存储类型，默认是IN_MEMORY本地内存，此外还有多种形式
+    behind-proxy: true #表示代理之后
+    default-policy: #全局限流策略，可单独细化到服务粒度
+      limit: 2 #在一个单位时间窗口的请求数量
+      quota: 1 #在一个单位时间窗口的请求时间限制
+      refresh-interval: 3 #单位时间窗口
+      type:
+        - user #可指定用户粒度
+        - origin #可指定客户端地址粒度
+        - url #可指定url粒度
+    #策略是，3秒内访问不允许超过 2 次，并且这 2 次请求要小于 1 秒
+    policy-list:
+      provider4:
+        - limit: 2
+          quota: 4
+          refresh-interval: 6
+          type:
+            - origin
+
+
+
 
 
 
