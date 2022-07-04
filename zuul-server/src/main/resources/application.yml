@@ -45,6 +45,11 @@ zuul:
           refresh-interval: 6
           type:
             - origin
+management:
+  endpoints:
+    web:
+      exposure:
+        include: routes
 
 
 
