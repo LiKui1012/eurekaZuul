@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--看不到启动日志-->
+<configuration debug="false" scan="false">
+	<springProperty scope="context" name="log_level" source="oes.log.level" defaultValue="INFO"/>
+    <!--本地控制台打印，如果需要关闭则改为false-->
+	<springProperty scope="context" name="log_open_console" source="oes.log.open_console" defaultValue="true"/>
+
+	<property name="app_name" value="${app.name:-provider1}"/>
+	<!--<property name="log_path" value="${log.home:-/tools/logs}"/>-->
+	<property name="log_path" value="/opt/lk/logs/"/>
+
+
+	<property name="log.pattern"
+			  value="%d{yyyy-MM-dd HH:mm:ss.SSS}|%level|${PID:-}|%thread|${app_name:-}|%X{X-B3-TraceId:-}|%X{X-B3-SpanId:-}|%X{X-Span-Export:-}|%class{36}.%method{20}-%line|%msg%n"/>
+	<!-- Console log output -->
+	<!--<appender name="console" class="ch.qos.logback.core.ConsoleAppender">-->
+		<!--<encoder>-->
+			<!--<pattern>${log.pattern}</pattern>-->
+			<!--<charset>UTF-8</charset>-->
+		<!--</encoder>-->
+	<!--</appender>-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!--此日志appender是为开发使用，只配置最底级别，控制台输出的日志级别是大于或等于此级别的日志信息-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ALL</level>
+        </filter>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+	<!-- Log file debug output -->
+	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log_path}/${app_name}.%d{yyyy-MM-dd}.info.log</fileNamePattern>
+			<maxHistory>90</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<!-- Log file error output -->
+	<appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log_path}/${app_name}.%d{yyyy-MM-dd}.error.log</fileNamePattern>
+			<maxHistory>90</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+	</appender>
+
+	<!-- Feign log -->
+	<appender name="feignFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log_path}/${app_name}.%d{yyyy-MM-dd}.feign.log</fileNamePattern>
+			<maxHistory>90</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<logger name="feign" level="INFO" addtivity="false">
+		<appender-ref ref="feignFile"/>
+	</logger>
+
+	<logger name="org.apache" level="WARN"/>
+	<logger name="org.springframework" level="WARN"/>
+	<logger name="com.netflix" level="WARN"/>
+	<logger name="io.github.openfeign" level="WARN"/>
+	<logger name="com.squareup.okhttp3" level="WARN"/>
+	<logger name="com.provider" />
+	<logger name="com.provider.provider1st" level="INFO" />
+
+	<!-- Level: FATAL 0  ERROR 3  WARN 4  INFO 6  DEBUG 7 -->
+	<root level="${log_level}">
+		<if condition='property("log_open_console").contains("true")'>
+			<then>
+				<appender-ref ref="console"/>
+			</then>
+		</if>
+		<appender-ref ref="file" />
+		<appender-ref ref="error" />
+	</root>
+</configuration>

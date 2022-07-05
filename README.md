@@ -33,6 +33,14 @@ bug解决myrule一定要加@Scope(value=“prototype”)
 而且重启之后又会一直返回B服务，此时大家都反馈路由错了的问题。
 我当时感觉就是当出现线程安全问题的时候才可能出现这种情况
 
+zuul:功能
+1.接口过滤：可以对请求统一做检验，如token，请求参数
+2.接口添加统一操作：记录zuul处理接口时间等，有点像aop
+3.接口路由转发：内部集成ribbon，histryx，可以做到负载均衡请求，请求熔断等操作
+熔断只会在接口zuul调用微服务不通的情况触发，如网络延迟或者被调用微服务宕机
+4.zuul功能实现，pre，route，error，post。。可以多个pre，route...可以设置执行顺序
+route会调用myrule自定义调用微服务策略。
+
 请求路径
 1.直接请求
 http://localhost:8081/test1/test1
