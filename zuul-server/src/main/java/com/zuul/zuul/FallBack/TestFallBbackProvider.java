@@ -59,9 +59,8 @@ public class TestFallBbackProvider implements FallbackProvider {
      */
     @Override
     public String getRoute() {
-        System.out.println(
-                "++++++++++++所有服务异常回退"
-        );
+       log.info("info日志");
+       log.error("error日志");
         //return "eureka-client";
         //服务Id ，若需要所有服务调用都支持回退，返回null 或者 * 即可
 //        return "*";
