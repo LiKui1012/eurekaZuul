@@ -12,8 +12,7 @@
             <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 %hostname-->
             <pattern>
                 <!--[%d{yyyy-MM-dd HH:mm:ss.SSS}][%|${PID:-}][%thread|${app_name:-}][%X{X-B3-TraceId:-}][%X{X-B3-SpanId:-}][%X{X-Span-Export:-}][%class{36}.%method{20}-%line|%msg%n"/>-->
-                [%d{yyyy-MM-dd HH:mm:ss:SSS}][${projectName}][%level][%c.%M]\(%L\) : --==--
-                %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}
+                [%d{yyyy-MM-dd HH:mm:ss:SSS}][${projectName}][%level][%c.%M]\(%L\) : --==-- %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}
                 <!--[%d{yyyy-MM-dd HH:mm:ss:SSS}][runxsports-mat][%highlight(%-5level)] [] %clr(${PID:- }) [%c.%M]\(%L\) : &#45;&#45; %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}-->
             </pattern>
         </encoder>
