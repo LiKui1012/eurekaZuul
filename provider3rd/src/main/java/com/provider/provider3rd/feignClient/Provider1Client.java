@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
  * 功能描述 :
  */
 
-@FeignClient(name = "provider1")//这里的 provider1 是指provider1注册在eureka上的服务名
-public interface Provider1Client {
 
+@FeignClient(name = "provider1", fallbackFactory = Provider1ClientFallBack.class)//这里的 provider1 是指provider1注册在eureka上的服务名
+public interface Provider1Client {
     @GetMapping("test1/test1")//这里指的是具体的provider1的接口
     String test1();
 

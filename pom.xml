@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.eureka_zuul</groupId>
     <artifactId>demo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>demo</name>
     <description>Demo project for Spring Boot</description>
@@ -20,11 +20,15 @@
     </properties>
 
     <modules>
+        <module>database</module>
+        <module>datasharding</module>
         <module>eureka-server</module>
         <module>zuul-server</module>
         <module>provider1st</module>
         <module>provider2nd</module>
         <module>provider3rd</module>
+        <module>provider4our</module>
+
     </modules>
 
     <dependencies>

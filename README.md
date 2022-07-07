@@ -7,7 +7,8 @@
 8.使用Ribbon+RestTemplate调用微服务也可以实现负载均衡 ok provider4
 9.配置接口请求前缀和服务名隐藏 ok
 10.引入jpa 增加分表策略，引入mongo实现连表查询多数据源配置
-11.微服务调用之间的熔断
+11.微服务调用之间的熔断 ok
+12.将database作为公共包依赖 ok
 请求路径
 1.可以直接请求
 http://localhost:8083/test3/test3 

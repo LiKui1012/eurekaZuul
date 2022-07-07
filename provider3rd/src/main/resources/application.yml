@@ -11,3 +11,15 @@ eureka:
     instance_id: ${spring.cloud.client.hostname}:${server.port}
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 10
+feign:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 60000
+        readTimeout: 60000
+  hystrix:
+    enabled: true
