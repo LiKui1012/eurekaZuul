@@ -6,7 +6,7 @@
 7.使用zuul统计接口耗时，接口请求次数  使用zuul的过滤器可以实现全局接口耗时，aop实现provider3接口访问次数统计和接口耗时 ok
 8.使用Ribbon+RestTemplate调用微服务也可以实现负载均衡 ok provider4
 9.配置接口请求前缀和服务名隐藏 ok
-10.引入jpa 增加分表策略，引入mongo实现连表查询多数据源配置
+10.引入jpa 增加分表策略，引入mongo实现连表查询多数据源配置 nook
 11.微服务调用之间的熔断 ok
 12.将database作为公共包依赖 ok
 请求路径
@@ -55,3 +55,13 @@ http://localhost:8086/pro3/test3/test4
 http://localhost:8086/pro3/test3/testToError
 http://localhost:8086/provider4/test4/test4
 http://localhost:8086/pro1/test1/test1
+
+
+公共包：
+1.注意删除启动被调用的启动类，maven pulign打包
+2.父工程module子工程，子工程partent引用父工程
+3.调用方区分使用mapperScan还是jpaEnabledRes，加入被调用方的路劲
+
+
+待完善，分表，不设置主键自增，增加必须指定id，这样保存的时候需要手动生成一个id
+设置主键id，可以保存，但是分表有错误。
