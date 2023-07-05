@@ -47,9 +47,12 @@ zuul:
             - origin
 management:
   endpoints:
-    web:
-      exposure:
-        include: routes
+#    web:
+#      exposure:
+#        include: routes
+#      base-path: /
+  health:
+    show-details: always
 
 
 

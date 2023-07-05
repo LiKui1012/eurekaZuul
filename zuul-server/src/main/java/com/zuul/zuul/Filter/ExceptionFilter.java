@@ -37,6 +37,7 @@ public class ExceptionFilter extends BaseFilter {
      */
     @Override
     public boolean shouldFilter() {
+        System.out.println("Error-shouldFilter");
         return true;
     }
     /**
